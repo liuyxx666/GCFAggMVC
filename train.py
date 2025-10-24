@@ -29,7 +29,7 @@ parser.add_argument("--temperature_f", default=0.5)
 parser.add_argument("--learning_rate", default=0.0003)
 parser.add_argument("--weight_decay", default=0.)
 parser.add_argument("--workers", default=8)
-parser.add_argument("--rec_epochs", default=200)
+parser.add_argument("--rec_epochs", default=2)  #200
 parser.add_argument("--fine_tune_epochs", default=100)
 parser.add_argument("--low_feature_dim", default=512)
 parser.add_argument("--high_feature_dim", default=128)
@@ -43,7 +43,7 @@ if args.dataset == "CCV":
     args.fine_tune_epochs = 100
     seed = 3
 if args.dataset == "Hdigit":
-    args.fine_tune_epochs =100
+    args.fine_tune_epochs =1   #100
     seed = 10
 if args.dataset == "YouTubeFace":
     args.fine_tune_epochs = 100
@@ -129,7 +129,7 @@ def fine_tune(epoch):
 if not os.path.exists('./models'):
     os.makedirs('./models')
 model = GCFAggMVC(view, dims, args.low_feature_dim, args.high_feature_dim, device)
-print(model)
+#print(model)
 model = model.to(device)
 optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate, weight_decay=args.weight_decay)
 criterion = Loss(args.batch_size, args.temperature_f, device).to(device)

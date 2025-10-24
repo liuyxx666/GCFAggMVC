@@ -42,9 +42,11 @@ class GCFAggMVC(nn.Module):
             self.decoders.append(Decoder(input_size[v], low_feature_dim).to(device))
         self.encoders = nn.ModuleList(self.encoders)
         self.decoders = nn.ModuleList(self.decoders)
+        #每个视图z输入MLP变成H帽
         self.Specific_view = nn.Sequential(
             nn.Linear(low_feature_dim, high_feature_dim),
         )
+        #这里是输出的共识表示是low_feature_dim*view，要再降维
         self.Common_view = nn.Sequential(
             nn.Linear(low_feature_dim*view, high_feature_dim),
         )
@@ -71,6 +73,7 @@ class GCFAggMVC(nn.Module):
             z = self.encoders[v](x)
             zs.append(z)
         commonz = torch.cat(zs, 1)
+        #此时得到的已经是残差连接和前馈神经网络的共识表示
         commonz, S = self.TransformerEncoderLayer(commonz)
         commonz = normalize(self.Common_view(commonz), dim=1)
         return commonz, S

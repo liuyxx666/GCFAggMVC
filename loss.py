@@ -10,6 +10,7 @@ class Loss(nn.Module):
         self.mask = self.mask_correlated_samples(batch_size)
         self.criterion = nn.CrossEntropyLoss(reduction="sum")
 
+
     def mask_correlated_samples(self, N):
         mask = torch.ones((N, N))
         mask = mask.fill_diagonal_(0)
@@ -21,7 +22,7 @@ class Loss(nn.Module):
 
     def Structure_guided_Contrastive_Loss(self, h_i, h_j, S):
         S_1 = S.repeat(2, 2)
-        all_one = torch.ones(self.batch_size*2, self.batch_size*2).to('cuda')
+        all_one = torch.ones(self.batch_size*2, self.batch_size*2).to(self.device)
         S_2 = all_one - S_1
         N = 2 * self.batch_size
         h = torch.cat((h_i, h_j), dim=0)
